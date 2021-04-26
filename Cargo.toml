@@ -1,0 +1,20 @@
+[package]
+name = "wifi"
+version = "0.1.0"
+authors = ["Hojjat <Hojjat.Abdollahi@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+wifiscanner = { path = "../wifiscanner" }
+wifi-rs = {path = "../wifi-rs" } 
+text_io = "0"
+rocket = { git = "https://github.com/SergioBenitez/Rocket"}
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+online = ""
+[dependencies.rocket_contrib]
+git =  "https://github.com/SergioBenitez/Rocket"
+default-features = false
+features = ["json"]
