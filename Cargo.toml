@@ -8,7 +8,7 @@ edition = "2018"
 
 [dependencies]
 wifiscanner = { path = "../wifiscanner" }
-wifi-rs = {path = "../wifi-rs" } 
+wifi-rs = "" # {path = "../wifi-rs" } 
 text_io = "0"
 rocket = { git = "https://github.com/SergioBenitez/Rocket"}
 serde = { version = "1.0", features = ["derive"] }

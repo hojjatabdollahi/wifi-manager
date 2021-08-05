@@ -25,7 +25,7 @@ struct Response {
     #[serde(rename = "Message")]
     message: String,
     #[serde(rename = "Data")]
-    data: Vec<String>,
+    data: Vec<(String, bool)>,
 }
 
 type Result<T> = std::result::Result<T, WifiError>;
@@ -285,12 +285,13 @@ fn disconnect_wifi() -> Result<String> {
     }
 }
 
-fn get_ssids() -> Result<Vec<String>> {
-    let mut results: Vec<String> = vec![];
+fn get_ssids() -> Result<Vec<(String, bool)>> {
+    let mut results: Vec<(String, bool)> = vec![];
     match wifiscanner::scan() {
         Ok(wifis) => {
             for wifi in &wifis {
-                results.push(wifi.ssid.to_string());
+                println!("{:?}", wifi);
+                results.push((wifi.ssid.to_string(), wifi.security.is_empty()));
             }
             Ok(results)
         }
