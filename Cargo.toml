@@ -8,13 +8,16 @@ edition = "2018"
 
 [dependencies]
 wifiscanner = { path = "../wifiscanner" }
-wifi-rs = "" # {path = "../wifi-rs" } 
+#wifi-rs = "0.2.2" # {path = "../wifi-rs" } 
 text_io = "0"
-rocket = { git = "https://github.com/SergioBenitez/Rocket"}
+#rocket = { git = "https://github.com/SergioBenitez/Rocket"}
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-online = ""
-[dependencies.rocket_contrib]
+online = "3.0.1"
+color-eyre = "0.5.11"
+tracing = "0.1.26"
+tracing-subscriber = "0.2.19"
+[dependencies.rocket]
 git =  "https://github.com/SergioBenitez/Rocket"
 default-features = false
 features = ["json"]
