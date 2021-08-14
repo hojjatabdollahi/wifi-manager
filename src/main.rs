@@ -362,10 +362,13 @@ fn get_current_ssid() -> Result<String, Report> {
 
     info!(?output);
 
-    Ok(String::from_utf8_lossy(&output.stdout)
-        .replace(" ", "")
-        .replace("\n", "")
-        .contains("enabled").to_string())
+    // info!(?String::from_utf8_lossy(&output.stdout)
+    //     .split('\n')
+    //     .into_iter()
+    //     .map(|str| str.starts_with("yes:"))
+    //     .collect::<Vec<_>>());
+
+    Ok("test".to_string())
     // let mut results: Vec<(String, bool)> = vec![];
     // match wifiscanner::scan() {
     //     Ok(wifis) => {
