@@ -12,6 +12,7 @@ use wifiscanner;
 use color_eyre::{Report, eyre::eyre};
 use tracing::info;
 use tracing_subscriber::EnvFilter;
+use substring::Substring;
 
 struct SWifi {
     data1: Arc<Mutex<usize>>,
@@ -255,15 +256,21 @@ async fn current_ssid<'r>(state: WiFiState<'r>) -> Json<Response> {
     match state.data1.try_lock() {
         Ok(mut lock) => {
             match get_current_ssid() {
-                Ok(ssid_bool) => {
+                Ok(Some(ssid)) => {
                     output = Response {
                         message: format!("Done"),
-                        data: vec![(ssid_bool, true)],
+                        data: vec![(ssid, true)],
+                    };
+                }
+                Ok(None) => {
+                    output = Response {
+                        message: format!("Done"),
+                        data: vec![(String::new(), false)],
                     };
                 }
                 Err(_) => {
                     output = Response {
-                        message: format!("Failed to get the SSIDs"),
+                        message: format!("Failed to get the SSID"),
                         data: vec![],
                     };
                 }
@@ -354,7 +361,7 @@ fn get_ssids() -> Result<Vec<(String, bool)>, Report> {
 }
 
 
-fn get_current_ssid() -> Result<String, Report> {
+fn get_current_ssid() -> Result<Option<String>, Report> {
 
     let output = Command::new("nmcli")
         .args(&["-t", "-f", "active,ssid", "dev", "wifi"])
@@ -362,24 +369,13 @@ fn get_current_ssid() -> Result<String, Report> {
 
     info!(?output);
 
-    // info!(?String::from_utf8_lossy(&output.stdout)
-    //     .split('\n')
-    //     .into_iter()
-    //     .map(|str| str.starts_with("yes:"))
-    //     .collect::<Vec<_>>());
-
-    Ok("test".to_string())
-    // let mut results: Vec<(String, bool)> = vec![];
-    // match wifiscanner::scan() {
-    //     Ok(wifis) => {
-    //         for wifi in &wifis {
-    //             println!("{:?}", wifi);
-    //             results.push((wifi.ssid.to_string(), wifi.security.is_empty()));
-    //         }
-    //         Ok(results)
-    //     }
-    //     Err(_e) => Err(WifiError),
-    // }
+    let output = String::from_utf8_lossy(&output.stdout);
+    Ok(output 
+        .split('\n')
+        .into_iter()
+        .filter(|&str| str.starts_with("yes:"))
+        .map(|found| found.substring(4,found.len()).to_string())
+        .nth(0))
 }
 
 
