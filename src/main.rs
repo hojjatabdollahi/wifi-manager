@@ -7,7 +7,6 @@ use rocket::serde::json::Json;
 use serde::{Deserialize, Serialize};
 use std::process::Command;
 use std::sync::Arc;
-// use wifi_rs::{prelude::*, WiFi};
 use wifiscanner;
 use color_eyre::{Report, eyre::eyre};
 use tracing::info;
@@ -30,24 +29,6 @@ struct Response {
     #[serde(rename = "Data")]
     data: Vec<(String, bool)>,
 }
-
-// type Result<T> = std::result::Result<T, WifiError>;
-
-
-// #[derive(Debug, Clone)]
-// struct WifiError;
-
-// impl fmt::Display for WifiError {
-//     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-//         write!(f, "Wifi error")
-//     }
-// }
-
-// impl std::error::Error for WifiError {
-//     fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
-//         None
-//     }
-// }
 
 
 type WiFiState<'r> = &'r State<SWifi>;
@@ -333,10 +314,6 @@ fn setup() -> Result<(), Report> {
 
 fn disconnect_wifi() -> Result<String, Report> {
     let device = wifiscanner::get_dev()?;
-    // let config = Some(Config {
-    //     interface: Some(&device),
-    // });
-    // let wifi = WiFi::new(config);
     let output = Command::new("nmcli")
         .args(&["d", "disconnect", "ifname", &device])
         .output()
@@ -384,10 +361,6 @@ fn connect_wifi(ssid: String, passwd: String) -> Result<String, Report> {
     if !is_wifi_enabled()? {
         return Err(eyre!("Wifi is disabled!"));
     }
-    // let config = Some(Config {
-    //     interface: Some(&device),
-    // });
-    // let mut wifi = WiFi::new(config);
 
     let output = Command::new("nmcli")
         .args(&[
