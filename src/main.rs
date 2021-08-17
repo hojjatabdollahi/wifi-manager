@@ -27,7 +27,7 @@ struct Response {
     #[serde(rename = "Message")]
     message: String,
     #[serde(rename = "Data")]
-    data: Vec<(String, bool)>,
+    data: Vec<(String, String)>,
 }
 
 
@@ -71,7 +71,7 @@ async fn isonline<'r>(state: WiFiState<'r>) -> Json<Response> {
 
                 Json(Response {
                     message: "online".to_string(),
-                    data: vec![("online".to_string(), true)],
+                    data: vec![("online".to_string(), "true".to_string())],
                 })
             }
             Err(_e) => {
@@ -79,14 +79,14 @@ async fn isonline<'r>(state: WiFiState<'r>) -> Json<Response> {
                 // format!("We are not connected to the internet")
                 Json(Response {
                     message: "offline".to_string(),
-                    data: vec![("offline".to_string(), false)],
+                    data: vec![("offline".to_string(), "false".to_string())],
                 })
             }
         },
         Err(_) => {
             Json(Response {
                 message: "busy".to_string(),
-                data: vec![("busy".to_string(), false)],
+                data: vec![("busy".to_string(), "false".to_string())],
             })
         }
     }
@@ -100,20 +100,20 @@ async fn wifion<'r>(state: WiFiState<'r>) -> Json<Response>  {
                 *lock += 1;
                 Json(Response {
                     message: "on".to_string(),
-                    data: vec![("on".to_string(), true)],
+                    data: vec![("on".to_string(), "true".to_string())],
                 })
             }
             Err(_e) => {
                 Json(Response {
                     message: "error".to_string(),
-                    data: vec![("error".to_string(), false)],
+                    data: vec![("error".to_string(), "false".to_string())],
                 })
             }
         },
         Err(_e) => {
             Json(Response {
                 message: "busy".to_string(),
-                data: vec![("busy".to_string(), false)],
+                data: vec![("busy".to_string(), "false".to_string())],
             })
         }
     }
@@ -127,20 +127,20 @@ async fn wifioff<'r>(state: WiFiState<'r>) -> Json<Response> {
                 *lock += 1;
                 Json(Response {
                     message: "off".to_string(),
-                    data: vec![("off".to_string(), true)],
+                    data: vec![("off".to_string(), "true".to_string())],
                 })
             }
             Err(_e) => {
                 Json(Response {
                     message: "error".to_string(),
-                    data: vec![("error".to_string(), false)],
+                    data: vec![("error".to_string(), "false".to_string())],
                 })
             }
         },
         Err(_e) => {
             Json(Response {
                 message: "busy".to_string(),
-                data: vec![("busy".to_string(), false)],
+                data: vec![("busy".to_string(), "false".to_string())],
             })
         }
     }
@@ -154,27 +154,27 @@ async fn iswifienabled<'r>(state: WiFiState<'r>) -> Json<Response> {
                 *lock += 1;
                 Json(Response {
                     message: "enabled".to_string(),
-                    data: vec![("enabled".to_string(), true)],
+                    data: vec![("enabled".to_string(), "true".to_string())],
                 })
             }
             Ok(false) => {
                 *lock += 1;
                 Json(Response {
                     message: "disabled".to_string(),
-                    data: vec![("disabled".to_string(), false)],
+                    data: vec![("disabled".to_string(), "false".to_string())],
                 })
             }
             Err(_e) => {
                 Json(Response {
                     message: "error".to_string(),
-                    data: vec![("error".to_string(), false)],
+                    data: vec![("error".to_string(), "false".to_string())],
                 })
             }
         },
         Err(_e) => {
             Json(Response {
                 message: "busy".to_string(),
-                data: vec![("busy".to_string(), false)],
+                data: vec![("busy".to_string(), "false".to_string())],
             })
         }
     }
@@ -201,20 +201,20 @@ async fn connect<'r>(
                 Ok(_msg) => {
                     return Json(Response {
                         message: "done".to_string(),
-                        data: vec![("done".to_string(), true)],
+                        data: vec![("done".to_string(), "true".to_string())],
                     });
                 }
                 Err(_) => {
                     return Json(Response {
                         message: "error".to_string(),
-                        data: vec![("error".to_string(), false)],
+                        data: vec![("error".to_string(), "false".to_string())],
                     });
                 }
             }
         }
         Err(_) => Json(Response {
             message: format!("busy"),
-            data: vec![("busy".to_string(), false)],
+            data: vec![("busy".to_string(), "false".to_string())],
         }),
     }
 }
@@ -228,20 +228,20 @@ async fn disconnect<'r>(state: WiFiState<'r>) -> Json<Response> {
                 Ok(_msg) => {
                     return Json(Response {
                         message: "done".to_string(),
-                        data: vec![("done".to_string(), true)],
+                        data: vec![("done".to_string(), "true".to_string())],
                     });
                 }
                 Err(_) => {
                     return Json(Response {
                         message: "error".to_string(),
-                        data: vec![("error".to_string(), false)],
+                        data: vec![("error".to_string(), "false".to_string())],
                     });
                 }
             }
         }
         Err(_) => Json(Response {
             message: format!("busy"),
-            data: vec![("busy".to_string(), false)],
+            data: vec![("busy".to_string(), "false".to_string())],
         }),
     }
 }
@@ -261,7 +261,7 @@ async fn ssids<'r>(state: WiFiState<'r>) -> Json<Response> {
                 Err(_) => {
                     output = Response {
                         message: format!("error"),
-                        data: vec![("error".to_string(), false)],
+                        data: vec![("error".to_string(), "false".to_string())],
                     };
                 }
             }
@@ -270,7 +270,7 @@ async fn ssids<'r>(state: WiFiState<'r>) -> Json<Response> {
         }
         Err(_) => Json(Response {
             message: format!("busy"),
-            data: vec![("busy".to_string(), false)],
+            data: vec![("busy".to_string(), "false".to_string())],
         }),
     }
 }
@@ -284,19 +284,19 @@ async fn current_ssid<'r>(state: WiFiState<'r>) -> Json<Response> {
                 Ok(Some(ssid)) => {
                     output = Response {
                         message: format!("Done"),
-                        data: vec![(ssid, true)],
+                        data: vec![(ssid, "true".to_string())],
                     };
                 }
                 Ok(None) => {
                     output = Response {
                         message: format!("Done"),
-                        data: vec![(String::new(), false)],
+                        data: vec![(String::new(), "false".to_string())],
                     };
                 }
                 Err(_) => {
                     output = Response {
                         message: format!("error"),
-                        data: vec![("error".to_string(), false)],
+                        data: vec![("error".to_string(), "false".to_string())],
                     };
                 }
             }
@@ -305,7 +305,7 @@ async fn current_ssid<'r>(state: WiFiState<'r>) -> Json<Response> {
         }
         Err(_) => Json(Response {
             message: format!("busy"),
-            data: vec![("busy".to_string(), false)],
+            data: vec![("busy".to_string(), "false".to_string())],
         }),
     }
 }
@@ -371,12 +371,12 @@ fn disconnect_wifi() -> Result<String, Report> {
     }
 }
 
-fn get_ssids() -> Result<Vec<(String, bool)>, Report> {
-    let mut results: Vec<(String, bool)> = vec![];
+fn get_ssids() -> Result<Vec<(String, String)>, Report> {
+    let mut results: Vec<(String, String)> = vec![];
     let wifis =  wifiscanner::scan()?;
     for wifi in wifis {
         println!("{:?}", wifi);
-        results.push((wifi.ssid.to_string(), wifi.security.is_empty()));
+        results.push((wifi.ssid.to_string(), wifi.security.is_empty().to_string()));
     }
     Ok(results)
 }
