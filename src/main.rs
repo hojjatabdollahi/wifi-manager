@@ -198,10 +198,16 @@ async fn connect<'r>(
                 connection_info.ssid.to_string(),
                 connection_info.passwd.to_string(),
             ) {
-                Ok(_msg) => {
+                Ok(true) => {
                     return Json(Response {
                         message: "done".to_string(),
                         data: vec![("done".to_string(), "true".to_string())],
+                    });
+                }
+                Ok(false) => {
+                    return Json(Response {
+                        message: "error".to_string(),
+                        data: vec![("error".to_string(), "false".to_string())],
                     });
                 }
                 Err(_) => {
@@ -400,7 +406,7 @@ fn get_current_ssid() -> Result<Option<String>, Report> {
 }
 
 
-fn connect_wifi(ssid: String, passwd: String) -> Result<String, Report> {
+fn connect_wifi(ssid: String, passwd: String) -> Result<bool, Report> {
     let device = wifiscanner::get_dev()?; 
     if !is_wifi_enabled()? {
         return Err(eyre!("Wifi is disabled!"));
@@ -419,14 +425,16 @@ fn connect_wifi(ssid: String, passwd: String) -> Result<String, Report> {
         ])
         .output()
         .map_err(|_err| eyre!("couldn't connect"))?;
+    let outputstr = String::from_utf8_lossy(&output.stdout);
+    info!(?outputstr);
 
     if !String::from_utf8_lossy(&output.stdout)
         .as_ref()
         .contains("successfully activated")
     {
-        return Ok("did not connect".to_string());
+        return Ok(false);
     }
-    Ok("Connected".to_string())
+    Ok(true)
 }
 
 
