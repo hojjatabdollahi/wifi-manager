@@ -454,6 +454,9 @@ fn turn_on() -> Result<(), Report> {
     Command::new("nmcli")
         .args(&["radio", "wifi", "on"])
         .output()?;
+    Command::new("iw")
+        .args(&["dev", "wlp2s0", "scan"])
+        .output()?;
 
     Ok(())
 }
